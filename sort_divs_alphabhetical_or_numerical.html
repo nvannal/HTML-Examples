@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>HTML Examples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" rel="stylesheet">
+    <link href="./css/template.css" rel="stylesheet">
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style type="text/css">
+@import url(http://fonts.googleapis.com/css?family=Cambo);
+
+body {
+    font-family: Cambo, sans-serif !important;
+    color: #7f8c8d;
+}
+
+.box {
+    background: red;
+    height: 200px;
+    width: 200px;
+}
+.box h1 {
+    color: white;
+    font-size: 3.5em;
+    text-align: center;
+}
+.box h2 {
+    color: black;
+    font-size: 2.5em;
+    text-align: center;
+}
+
+
+</style>
+</head>
+
+<body>
+
+        <div class="wrap">
+                <button id="alphBnt">Alphabetical</button>
+                <button id="numBnt">Numerical</button>
+                <div id="container">
+                  <div class="box">
+                    <h1>B<h1>
+                    <h2>10.35</h2>  
+                  </div>
+                
+                  <div class="box">
+                    <h1>A<h1>
+                    <h2>100.05</h2>
+                  </div>
+                
+                  <div class="box">
+                    <h1>D<h1>
+                    <h2>200</h2>  
+                  </div>
+                
+                  <div class="box">
+                    <h1>C<h1>
+                    <h2>5,510.25</h2>
+                  </div>
+                </div>
+              </div>
+    
+
+</body>
+<script type="text/javascript">
+var $divs = $("div.box");
+
+$('#alphBnt').on('click', function () {
+    var alphabeticallyOrderedDivs = $divs.sort(function (a, b) {
+        return $(a).find("h1").text() > $(b).find("h1").text();
+    });
+    $("#container").html(alphabeticallyOrderedDivs);
+});
+
+$('#numBnt').on('click', function () {
+    var numericallyOrderedDivs = $divs.sort(function (a, b) {
+        return $(a).find("h2").text() > $(b).find("h2").text();
+    });
+    $("#container").html(numericallyOrderedDivs);
+});
+</script>
+
+</html>
