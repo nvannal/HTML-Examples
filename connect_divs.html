@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>HTML Examples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" rel="stylesheet">
+    <link href="./css/template.css" rel="stylesheet">
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<style type="text/css">
+@import url(http://fonts.googleapis.com/css?family=Cambo);
+
+body {
+    font-family: Cambo, sans-serif !important;
+    color: #7f8c8d;
+}
+
+div.elm { 
+    float:left; 
+    width:50px; 
+    height:50px; 
+    background-color:#9F9;
+    margin-right:50px;
+    margin-bottom:50px;
+}
+
+div.elm:nth-of-type(3n + 1) { clear:left; }
+div.elm:nth-of-type(3n) { margin-right:0px; }
+div.highlight { background-color:#F99; }
+div.connected { background-color:#99F; }
+div.connectbar { 
+    position : absolute; 
+    z-index : 10; 
+    background-color:#66C;
+}
+
+/* Using CSS*/
+.box{
+    border: 1px solid black;
+    background-color: #ccc;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+}
+.line{
+    width: 1px;
+    height: 100px;
+    background-color: black;
+    position: absolute;
+}
+
+#box1{
+    top: 0;
+    left: 0;
+}
+#box2{
+    top: 200px;
+    left: 0;
+}
+#box3{
+    top: 250px;
+    left: 200px;
+}
+ #line1{
+     top: 100px;
+    left: 50px;
+ }
+#line2{
+    top: 220px;
+    left: 150px;
+    height: 115px;
+    transform: rotate(120deg);
+        -webkit-transform: rotate(120deg);
+        -ms-transform: rotate(120deg);
+}
+
+
+</style>
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="60">
+
+    <div style="position:relative">
+            <h1>Connect divs using CSS</h1>
+            <div class="box" id="box1"></div>
+            <div class="box" id="box2"></div>
+            <div class="box" id="box3"></div>
+            
+            <div class="line" id="line1"></div>
+            <div class="line" id="line2"></div>
+
+    </div>
+
+    <div>
+        <h1>Using jQuery connect divs on click</h1>
+        <div class="homepage contentWrapper">
+                <div class="elm">Div 1</div>
+                <div class="elm">Div 2</div>
+                <div class="elm">Div 3</div>
+                <div class="elm">Div 4</div>
+                <div class="elm">Div 5</div>
+                <div class="elm">Div 6</div>
+                <div class="elm">Div 7</div>
+                <div class="elm">Div 8</div>
+                <div class="elm">Div 9</div>
+        </div>
+    </div>
+    
+
+</body>
+<script type="text/javascript">
+$(document).on("click", "div.elm", function(){
+  if ($(this).hasClass("connected")) return;
+    
+  if ($(this).hasClass("highlight")) {
+    $(this).removeClass("highlight");
+    return;
+  }
+  
+  if ($("div.highlight").length == 0) { 
+    $(this).addClass("highlight");
+  } else if (!$(this).hasClass("connected")) {
+    // there's one clicked already so lets connect em
+    var div_1 = $("div.highlight")
+    var pos_1 = div_1.position();
+    var div_2 = $(this)
+    var pos_2 = div_2.position();
+    if (pos_1.top == pos_2.top) {
+      // same row
+      if (Math.abs(pos_1.left - pos_2.left) == 100) {
+        // adjacent
+          var bar = $("<div></div>").addClass("connectbar").css({ "top" : (pos_1.top - 2 + div_1.height() / 2) + "px", "height" : "5px", "width" : "50px", "left" : ((pos_1.left > pos_2.left ? pos_2.left : pos_1.left) + 50) + "px" });
+          $("body").append(bar);          
+      } else {
+        // same row not adjacent
+          var bar1 = $("<div></div>").addClass("connectbar").css({ "top" : (pos_1.top + 50) + "px", "height" : "20px", "width" : "5px",  "left" : (pos_1.left - 2 + div_1.width() / 2) + "px"});
+          var bar2 = bar1.clone().css({"left" : (pos_2.left - 2 + div_2.width() / 2) + "px"});
+          var bar3 = $("<div></div>").addClass("connectbar").css({ "top" : (pos_1.top + 65) + "px", "left" : ((pos_1.left > pos_2.left ? pos_2.left : pos_1.left) + 25) + "px", "width" : "200px", "height" : "5px" });
+          $("body").append(bar1).append(bar2).append(bar3);
+      }
+    } else if (pos_1.left == pos_2.left) {
+      // same column
+      if (Math.abs(pos_1.top - pos_2.top) == 100) {
+        // adjacent
+          var bar = $("<div></div>").addClass("connectbar").css({ "top" : ((pos_1.top > pos_2.top ? pos_2.top : pos_1.top) + 50) + "px", "height" : "50px", "width" : "5px", "left" : (pos_1.left - 2 + div_1.width() / 2) + "px" });
+          $("body").append(bar);          
+      } else {
+        // same column not adjacent
+          var bar1 = $("<div></div>").addClass("connectbar").css({ "left" : (pos_1.left + 50) + "px", "height" : "5px", "width" : "20px",  "top" : (pos_1.top - 2 + div_1.height() / 2) + "px"});
+          var bar2 = bar1.clone().css({"top" : (pos_2.top - 2 + div_2.height() / 2) + "px"});
+          var bar3 = $("<div></div>").addClass("connectbar").css({ "left" : (pos_1.left + 65) + "px", "top" : ((pos_1.top > pos_2.top ? pos_2.top : pos_1.top) + 25) + "px", "width" : "5px", "height" : "200px" });
+          $("body").append(bar1).append(bar2).append(bar3);
+      }
+    }
+    div_1.removeClass("highlight").addClass("connected");
+    div_2.addClass("connected");
+  }    
+});
+</script>
+
+</html>
