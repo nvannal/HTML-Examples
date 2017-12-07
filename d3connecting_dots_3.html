@@ -1,0 +1,104 @@
+<html>
+<head><title>Hello</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+<style>
+
+.link line {
+  stroke: #696969;
+}
+
+.link line.separator {
+  stroke: #fff;
+  stroke-width: 2px;
+}
+
+.node circle {
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font: 10px sans-serif;
+  pointer-events: none;
+}
+
+</style>
+</head>
+<body>
+    <script type="text/javascript">
+    (function(){
+  var width, height, rules, map, tasks, links, nodes, svg, tick, radius, force, link, node;
+  width = 960;
+  height = 500;
+  rules = [['P1', 'T1'], ['T1', 'P2'], ['T1', 'P3'], ['P2', 'T2'], ['P3', 'T2'], ['T2', 'P4']];
+  map = d3.map();
+  rules.forEach(function(rule){
+    map.set(rule[0], {
+      fixed: false
+    });
+    return map.set(rule[1], false);
+  });
+  map.set('P1', {
+    fixed: true,
+    x: 100,
+    y: height / 2
+  });
+  map.set('P4', {
+    fixed: true,
+    x: width / 2 - 100,
+    y: height / 2
+  });
+  tasks = map.keys();
+  links = rules.map(function(rule){
+    return {
+      source: tasks.indexOf(rule[0]),
+      target: tasks.indexOf(rule[1])
+    };
+  });
+  nodes = tasks.map(function(k){
+    var entry;
+    entry = {
+      name: k
+    };
+    if (map.get(k).fixed) {
+      entry.fixed = true;
+      entry.x = map.get(k).x;
+      entry.y = map.get(k).y;
+    }
+    return entry;
+  });
+  svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
+  svg.append("svg:defs").append("svg:marker").attr("id", "arrow").attr("viewBox", "0 0 10 10").attr("refX", 27).attr("refY", 5).attr("markerUnits", "strokeWidth").attr("markerWidth", 8).attr("markerHeight", 6).attr("orient", "auto").append("svg:path").attr("d", "M 0 0 L 10 5 L 0 10 z");
+  svg.append("line").attr("x1", 5).attr("x2", 50).attr("y1", 5).attr("y2", 50).style("stroke", "black").attr("stroke-width", 2).attr("marker-end", "url(#arrow)");
+  tick = function(){
+    link.selectAll("line").attr("x1", function(d){
+      return d.source.x;
+    }).attr("y1", function(d){
+      return d.source.y;
+    }).attr("x2", function(d){
+      return d.target.x;
+    }).attr("y2", function(d){
+      return d.target.y;
+    }).attr("marker-end", "url(#arrow)");
+    node.attr("transform", function(d){
+      return "translate(" + d.x + "," + d.y + ")";
+    });
+  };
+  radius = d3.scale.sqrt().range([0, 6]);
+  force = d3.layout.force().size([width / 2, height]).charge(-400).linkDistance(function(d){
+    return 40;
+  });
+  force.nodes(nodes).links(links).on("tick", tick).start();
+  link = svg.selectAll(".link").data(links).enter().append("g").attr("class", "link");
+  link.append("line").style("stroke-width", 1).attr("marker-end", "url(#arrow)");
+  node = svg.selectAll(".node").data(nodes).enter().append("g").attr("class", "node").call(force.drag);
+  node.append("circle").attr("r", 10).style("fill", "blue");
+  node.append("text").attr("dy", ".35em").attr("text-anchor", "middle").text(function(d){
+    return d.name;
+  }).style("fill", "white");
+  console.log("HERE2");
+  console.log("HERE5");
+}).call(this);
+</script>
+</body>
+</html>
