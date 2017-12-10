@@ -10,7 +10,7 @@
     <meta name="author" content="">
 
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.0/d3.min.js" rel="stylesheet"> -->
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="d3.v3.min.js"></script>
 
 <style type="text/css">
 
@@ -76,55 +76,39 @@ image.circle {
 <script type="text/javascript">
    var data = {
     "nodes": [{
-        "name": "9748108991",
+        "name": "GIT",
             "type": 1,
-            "slug": "",
-            "entity": "company"
+            "slug": ""
     }, {
-        "name": "offnet",
+        "name": "BUILD",
             "type": 1,
-            "slug": "",
-            "entity": "employee"
+            "slug": ""
     }, {
-        "name": "onnet",
+        "name": "SCAN",
             "type": 1,
-            "slug": "",
-            "entity": "employee"
+            "slug": ""
     }, {
-        "name": "8749258125",
+        "name": "DEPLOY",
             "type": 4,
-            "slug": "",
-            "entity": "description"
-    }, {
-        "name": "9748697490",
-            "type": 4,
-            "slug": "",
-            "entity": "description"
+            "slug": ""
     }],
         "links": [{
         "source": 0,
             "target": 1,
             "value": 1,
-            "distance": 5
+            "distance": 10
     }, {
-        "source": 0,
+        "source": 1,
             "target": 2,
             "value": 1,
-            "distance": 5
+            "distance": 10
     }, {
-        "source": 1,
+        "source": 2,
             "target": 3,
-            "value": 4,
-            "distance": 5
-    }, {
-        "source": 1,
-            "target": 4,
-            "value": 4,
-            "distance": 5
+            "value": 1,
+            "distance": 10
     }]
 }
-
-
 
 var w = 500,
     h = 500,
@@ -137,7 +121,7 @@ var vis = d3.select("body").append("svg:svg").attr("width", w).attr(
 vis.append("marker")
     .attr("id", "arrowhead")
     .attr("refX", 6 + 6) /*must be smarter way to calculate shift*/
-.attr("refY", 2)
+    .attr("refY", 2)
     .attr("markerWidth", 6)
     .attr("markerHeight", 4)
     .attr("orient", "auto")
@@ -196,20 +180,10 @@ function dragstart(d) {
   d.fixed = true;
 }
 
-// size of the nodes are given here
+// size of the nodes are given here, entity: will be for driving circle size
 node.append("circle").attr("class", function (d) {
     return "node type" + d.type
-}).attr("r", function (d) {
-    if (d.entity == "description") {
-        return 16
-    } else if (d.entity == "company") {
-        return 14
-    } else if (d.entity == "number") {
-        return 25
-    } else {
-        return 18
-    }
-})
+}).attr("r", 20);
 
 
 node.append("text").attr("class", function (d) {
@@ -222,98 +196,15 @@ function (d) {
 });
 
 node.on("mouseover", function (d) {
-    if (d.entity == "description") {
-        d3.select(this).select('text').transition().duration(300).text(
-
+    d3.select(this).select('text').transition().duration(300).text(
         function (d) {
             return d.name;
         }).style("font-size", "15px")
-
-    } else if (d.entity == "employee") {
-        var asdf = d3.select(this);
-        asdf.select('text').remove();
-
-        asdf.append("text").text(function (d) {
-            return d.prefix + ' ' + d.fst_name
-        }).attr("class", "nodetext").attr("dx", 0).attr("dy", ".35em")
-            .style("font-size", "5px")
-            .attr("text-anchor", "middle").style("fill", "white")
-            .transition().duration(300).style("font-size", "12px");
-
-        asdf.append("text").text(function (d) {
-            return d.snd_name
-        }).attr("class", "nodetext").attr("transform",
-            "translate(0, 12)").attr("dx", 0).attr("dy", ".35em")
-            .style("font-size", "5px")
-            .attr("text-anchor", "middle").style("fill", "white")
-            .transition().duration(300).style("font-size", "12px");
-    } else {
-        d3.select(this).select('text').transition().duration(300)
-            .style("font-size", "15px")
-    }
-
-    if (d.entity == "company") {
-        d3.select(this).select('image').attr("width", "100px").attr("x",
-            "-46px").attr("y", "-36.5px").attr("xlink:href",
-
-        function (d) {
-            return d.name
-        });
-    }
-
-    if (d.entity == "company") {
-
-        d3.select(this).select('circle').transition().duration(300)
-            .attr("r", 28)
-
-    } else if (d.entity == "employee") {
-        d3.select(this).select('circle').transition().duration(300)
-            .attr("r", 15)
-    }
 });
 
 node.on("mouseout", function (d) {
-    if (d.entity == "company") {
-        d3.select(this).select('text').transition().duration(300).text(
-
-        function (d) {
-            return d.name;
-        }).style("font-size", "10px")
-    } else if (d.entity == "employee") {
-        ///////////////////////////
-        // CHANGE
-        ///////////////////////////
-
-        d3.select(this).selectAll('text').remove();
-
-        //d3.select(this).select('text')
-        d3.select(this).append('text').text(function (d) {
-            return d.name;
-        }).style("font-size", "14px").attr("dx", 0).attr("dy", ".35em")
-            .attr("text-anchor", "middle").style("fill", "white")
-            .attr("class", "nodetext").transition().duration(300)
-            .style("font-size", "10px")
-
-    } else {
-        d3.select(this).select('text').transition().duration(300)
-            .style("font-size", "10px")
-    }
-
-    if (d.entity == "company") {
-        d3.select(this).select('image').attr("width", "70px").attr("x",
-            "-36px").attr("y", "-36px").attr("xlink:href",
-
-        function (d) {
-            return d.img_hrefD
-        });
-    }
-
-    if (d.entity == "company" || d.entity == "employee") {
-
-        d3.select(this).select('circle').transition().duration(300)
-            .attr("r", 18)
-    }
-
+    d3.select(this).select('text').transition().duration(300)
+    .style("font-size", "10px")
 });
 
 node.on("mouseover", fade(.4, "red")).on("mouseout", fade(1));
@@ -375,7 +266,6 @@ function fade(opacity, color) {
     };
 
 }
-//});
 
 
 
